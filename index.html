@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Madam Jii? 💖</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Parisienne&family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF69B4;
+            --secondary-color: #9400D3;
+            --accent-color: #FFD700;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(
+                -45deg, 
+                #FF6B6B, 
+                #4ECDC4, 
+                #45B7D1, 
+                #FDCB6E, 
+                #6C5CE7, 
+                #FF69B4
+            );
+            background-size: 400% 400%;
+            animation: multiColorBackground 15s ease infinite;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes multiColorBackground {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 30%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 0% 70%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .heart-rain {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.7);
+            animation: fall linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.2),
+                0 0 15px rgba(255,105,180,0.3),
+                0 0 30px rgba(148,0,211,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        .content-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 105, 180, 0.2),
+                rgba(148, 0, 211, 0.2)
+            );
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FF1493, #FF69B4, #C71585);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-family: 'Lobster', cursive;
+            animation: textShine 3s linear infinite;
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 105, 180, 0.5);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .floating-hearts {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .glossy-btn {
+            position: relative;
+            overflow: hidden;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-family: 'Parisienne', cursive;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.1),
+                0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .glossy-btn::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(
+                circle at center, 
+                rgba(255,255,255,0.8) 0%, 
+                rgba(255,255,255,0) 70%
+            );
+            transform: rotate(-45deg);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .glossy-btn:hover::before {
+            opacity: 0.3;
+            animation: shine 1.5s ease;
+        }
+        
+        @keyframes shine {
+            from { transform: translateX(-100%) rotate(-45deg); }
+            to { transform: translateX(100%) rotate(-45deg); }
+        }
+
+        .glossy-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 25px rgba(0,0,0,0.2),
+                0 5px 10px rgba(0,0,0,0.15);
+        }
+        
+        .glossy-btn:active {
+            transform: translateY(2px);
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s ease infinite;
+        }
+
+        .no-btn {
+            background: linear-gradient(135deg, #9400D3, #4B0082, #8A2BE2);
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            margin: 1.5rem 0;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall linear forwards;
+            z-index: 5;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+
+        .ribbon {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            z-index: 11;
+        }
+
+        .ribbon-top-right {
+            top: 0;
+            right: 0;
+        }
+
+        .ribbon-text {
+            position: absolute;
+            display: block;
+            width: 225px;
+            padding: 15px 0;
+            background-color: #FF1493;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            right: -25px;
+            top: 30px;
+            transform: rotate(45deg);
+            font-family: Arial, sans-serif;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 0 10px white, 0 0 20px #FFD700;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="heart-rain" class="heart-rain"></div>
+    <div id="confetti-container"></div>
+
+    <div class="content-box">
+        <div class="ribbon ribbon-top-right">
+            <span class="ribbon-text">Just for you</span>
+        </div>
+        
+        <h1>Will You Be My Madam Jii? 💖</h1>
+        
+        <img src="./pic1.jpg" alt="Together Forever" class="profile-img" id="profile-img">
+        
+        <p class="message">I've been captivated by your smile since the day we met. Every moment with you feels like magic. Will you make me the happiest person alive?</p>
+        
+        <div class="button-container">
+            <button id="yesBtn" class="glossy-btn yes-btn">
+                Yes, I Will! 💖
+            </button>
+            <button id="noBtn" class="glossy-btn no-btn">
+                No Way 😅
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create heart rain effect
+        function createHeartRain() {
+            const heartRain = document.getElementById('heart-rain');
+            const hearts = ['❤️', '💖', '💕', '💗', '💓'];
+            
+            // Create multiple hearts
+            for (let i = 0; i < 100; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                
+                // Randomize heart properties
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                heartRain.appendChild(heart);
+            }
+
+            // Remove old hearts periodically
+            setTimeout(() => {
+                heartRain.innerHTML = '';
+                createHeartRain();
+            }, 10000);
+        }
+
+        // Create sparkles around the profile picture
+        function createSparkles() {
+            const profileImg = document.getElementById('profile-img');
+            const rect = profileImg.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const radius = rect.width / 2;
+            
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const x = centerX + Math.cos(angle) * (radius + 10);
+                const y = centerY + Math.sin(angle) * (radius + 10);
+                
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                sparkle.style.animationDelay = (i * 0.1) + 's';
+                
+                document.body.appendChild(sparkle);
+            }
+        }
+
+        // Create confetti for the celebration
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti-container');
+            const colors = ['#FF69B4', '#FF1493', '#C71585', '#9400D3', '#4B0082', '#8A2BE2', '#FFD700', '#FFA500', '#FF4500'];
+            
+            for (let i = 0; i < 200; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.opacity = Math.random() * 0.8 + 0.2;
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                
+                // Different shapes for confetti
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                } else if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '0';
+                } else {
+                    confetti.style.borderRadius = '5px';
+                }
+                
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        // Create floating hearts animation when hovered over the yes button
+        function createFloatingHearts(event) {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-hearts');
+            heart.innerHTML = '💖';
+            heart.style.left = event.clientX + 'px';
+            heart.style.top = event.clientY + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        // Initialize effects
+        window.onload = function() {
+            createHeartRain();
+            setTimeout(createSparkles, 1000);
+            
+            // Set up button interactions
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            let scale = 1;
+            let noBtnClicks = 0;
+            
+            yesBtn.addEventListener('mousemove', createFloatingHearts);
+            
+            noBtn.addEventListener('click', () => {
+                noBtnClicks++;
+                scale += 0.2;
+                
+                // Make the Yes button bigger and more noticeable
+                yesBtn.style.transform = `scale(${scale})`;
+                
+                // Make the No button harder to click
+                if (noBtnClicks <= 5) {
+                    const randomX = Math.random() * 300 - 150;
+                    const randomY = Math.random() * 300 - 150;
+                    
+                    gsap.to(noBtn, {
+                        x: randomX,
+                        y: randomY,
+                        rotation: Math.random() * 40 - 20,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                    
+                    // Change the No button text based on number of clicks
+                    const noBtnTexts = [
+                        "Really? 😢",
+                        "Are you sure? 🥺",
+                        "Think again! 😉",
+                        "Last chance! 💔",
+                        "Don't break my heart! 💔",
+                        "Please reconsider! 🙏"
+                    ];
+                    
+                    if (noBtnClicks <= noBtnTexts.length) {
+                        noBtn.textContent = noBtnTexts[noBtnClicks - 1];
+                    }
+                } else {
+                    // After 5 clicks, make the No button disappear
+                    gsap.to(noBtn, {
+                        opacity: 0,
+                        scale: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            noBtn.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            
+            yesBtn.addEventListener('click', () => {
+                // Celebration animation
+                createConfetti();
+                
+                // Change the message
+                const message = document.querySelector('.message');
+                message.textContent = "You've made me the happiest person alive! I can't wait to cherish every moment with you! ❤️";
+                
+                // Animate the yes button
+                gsap.to(yesBtn, {
+                    scale: 1.2,
+                    backgroundColor: "#FFD700",
+                    duration: 0.5,
+                    yoyo: true,
+                    repeat: 5
+                });
+                
+                // Hide the no button
+                gsap.to(noBtn, {
+                    opacity: 0,
+                    scale: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        noBtn.style.display = 'none';
+                    }
+                });
+                
+                // Change the yes button text
+                yesBtn.textContent = "You Said Yes! 💝";
+                
+                // Animate the entire page
+                gsap.to('.content-box', {
+                    borderColor: "#FFD700",
+                    boxShadow: "0 0 30px rgba(255, 215, 0, 0.5)",
+                    duration: 1
+                });
+                
+                // After a few seconds, redirect to the date page
+                setTimeout(() => {
+                    gsap.to('body', {
+                        opacity: 0,
+                        duration: 1,
+                        onComplete: () => {
+                            window.location.href = 'memory.html';
+                        }
+                    });
+                }, 6000);
+            });
+            
+            // Make the profile picture interactive
+            const profileImg = document.getElementById('profile-img');
+            profileImg.addEventListener('mouseover', () => {
+                gsap.to(profileImg, {
+                    rotation: 10,
+                    duration: 0.5,
+                    yoyo: true,
+                    repeat: 1
+                });
+            });
+        };
+    </script>
+</body>
+</html>

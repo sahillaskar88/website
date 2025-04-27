@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Lane - Proposal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;500&family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0, #e1f5fe, #bbdefb, #e8f5e9);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
+            color: #5d4037;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        @keyframes gradientBg {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #ad1457;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 5px rgba(233, 30, 99, 0.3); }
+            to { text-shadow: 0 0 15px rgba(233, 30, 99, 0.7), 0 0 25px rgba(156, 39, 176, 0.5); }
+        }
+
+        .subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 1.3rem;
+            color: #6a1b9a;
+            margin-bottom: 1rem;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem;
+            margin: 0 auto 2rem;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .profile-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 36px rgba(233, 30, 99, 0.25);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e91e63;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            border-color: #9c27b0;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .profile-text {
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .profile-text h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #9c27b0;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-text p {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #5d4037;
+        }
+
+        .memory-lane-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            padding: 2rem 0;
+            margin: 1rem 0;
+            height: 450px;
+            scrollbar-width: thin;
+            scrollbar-color: #e91e63 #f8bbd0;
+        }
+
+        .memory-lane-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .memory-lane-container::-webkit-scrollbar-track {
+            background: #f8bbd0;
+            border-radius: 10px;
+        }
+
+        .memory-lane-container::-webkit-scrollbar-thumb {
+            background-color: #e91e63;
+            border-radius: 10px;
+        }
+
+        .memory-card {
+            scroll-snap-align: center;
+            min-width: 300px;
+            height: 350px;
+            margin: 0 20px;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: transform 0.6s ease, opacity 0.6s ease, box-shadow 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .memory-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            z-index: -1;
+        }
+
+        .memory-card:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .memory-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .memory-card:hover {
+            box-shadow: 0 12px 30px rgba(233, 30, 99, 0.2), 0 0 20px rgba(233, 30, 99, 0.2);
+            transform: translateY(-10px);
+        }
+
+        .memory-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            color: #ad1457;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .memory-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .navigation-controls {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 1.5rem;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #e91e63, #9c27b0);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #9c27b0, #673ab7);
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .nav-btn:hover::before {
+            opacity: 1;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(233, 30, 99, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(233, 30, 99, 0.3);
+        }
+
+        #finalBtn {
+            background: linear-gradient(45deg, #e91e63, #ff4081, #9c27b0);
+            background-size: 200% auto;
+            animation: gradientBtn 3s ease infinite;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @keyframes gradientBtn {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 6px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .heart-beat {
+            animation: heartBeat 1.5s infinite;
+            font-size: 1.5rem;
+            color: #e91e63;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.2); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.2); }
+            70% { transform: scale(1); }
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(to right, #e91e63, #9c27b0, #673ab7);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.2s ease-out;
+            box-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Proposal Page */
+        .proposal-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8bbd0, #e1bee7, #d1c4e9, #bbdefb);
+            background-size: 400% 400%;
+            animation: gradientBg 10s ease infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s;
+            z-index: 1000;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .proposal-page.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .proposal-content {
+            max-width: 800px;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.5s ease 0.3s;
+        }
+
+        .proposal-page.visible .proposal-content {
+            transform: scale(1);
+        }
+
+        .proposal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #e91e63;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+
+        .proposal-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: #4a148c;
+            margin-bottom: 2rem;
+        }
+
+        .heart-icon {
+            font-size: 5rem;
+            color: #e91e63;
+            margin: 1rem 0;
+            display: inline-block;
+            animation: heartPulse 1.5s ease infinite;
+        }
+
+        @keyframes heartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .proposal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .proposal-btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .yes-btn {
+            background: linear-gradient(45deg, #e91e63, #f06292);
+            color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+        }
+
+        .yes-btn:hover {
+            background: linear-gradient(45deg, #d81b60, #ec407a);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.5);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #7b1fa2;
+            border: 2px solid #7b1fa2;
+        }
+
+        .back-btn:hover {
+            background: rgba(123, 31, 162, 0.1);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+            
+            .profile-text {
+                text-align: center;
+            }
+            
+            .memory-card {
+                min-width: 260px;
+                height: 320px;
+                padding: 1.5rem;
+            }
+            
+            .memory-text {
+                font-size: 1.5rem;
+            }
+            
+            .proposal-title {
+                font-size: 3rem;
+            }
+            
+            .proposal-text {
+                font-size: 1.2rem;
+            }
+            
+            .proposal-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .memory-card {
+                min-width: 220px;
+                height: 300px;
+                padding: 1.2rem;
+            }
+            
+            .navigation-controls {
+                flex-wrap: wrap;
+            }
+            
+            .proposal-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <header>
+        <h1>Our Memory Lane</h1>
+        <p class="subtitle">The moments that led us here...</p>
+    </header>
+    
+    <div class="profile-section">
+        <img src="./pic2.jpg" alt="Our Photo" class="profile-image">
+        <div class="profile-text">
+            <h2>Our Journey Together</h2>
+            <p>From strangers to soulmates, we've created countless memories that I'll cherish forever. Every laugh, every tear, every heartfelt conversation has only made my love for you grow stronger. Join me as we revisit some of our most precious moments...</p>
+        </div>
+    </div>
+    
+    <div class="memory-lane-container" id="memoryLane">
+        <div class="memory-card">
+            <div class="memory-emoji">✨</div>
+            <p class="memory-text">I still remember the first time I saw you...</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">😊</div>
+            <p class="memory-text">Every time you smile, it feels like the world freezes for a second.</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">💫</div>
+            <p class="memory-text">You make ordinary moments feel like magic.</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">💓</div>
+            <p class="memory-text">Just being around you makes my heart do flips.</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">🌅</div>
+            <p class="memory-text">I imagine us sharing a thousand little moments in the future...</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">🌟</div>
+            <p class="memory-text">Your laughter is my favorite sound in the whole world.</p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">💖</div>
+            <p class="memory-text">The specific smile of your's makes by heart to run 100 kmph  </p>
+        </div>
+        
+        <div class="memory-card">
+            <div class="memory-emoji">🌈</div>
+            <p class="memory-text">You've colored my world in ways I never knew possible.</p>
+        </div>
+    </div>
+    
+    <div class="navigation-controls">
+        <button class="nav-btn" id="prevBtn">Previous</button>
+        <button class="nav-btn" id="nextBtn">Next</button>
+        <button class="nav-btn" id="finalBtn">One More Thing...</button>
+    </div>
+    
+    <div class="music-control" id="musicControl">
+        <i class="heart-beat">♫</i>
+    </div>
+    
+    <div class="proposal-page" id="proposalPage">
+        <div class="proposal-content">
+            <h2 class="proposal-title">Will You Marry Me?</h2>
+            <div class="heart-icon">❤️</div>
+            <p class="proposal-text">You are my best friend, my confidant, and the love of my life. Every day with you has been a blessing, and I can't imagine spending my tomorrows with anyone else. I promise to cherish you, support you, and grow with you through all of life's adventures.</p>
+            <div class="proposal-buttons">
+                <button class="proposal-btn yes-btn" id="yesBtn">Yes!</button>
+                <button class="proposal-btn back-btn" id="backBtn">Let me think...</button>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://cdnjs.cloudflare.com/ajax/libs/music-fmodules/1.0.0/5sec/acoustic-guitar.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize particles background
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: ['#f8bbd0', '#e1bee7', '#bbdefb', '#ffcdd2', '#d1c4e9'] },
+                    shape: {
+                        type: 'circle',
+                        stroke: { width: 0, color: '#000000' },
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: true,
+                        anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+                    },
+                    size: {
+                        value: 6,
+                        random: true,
+                        anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#e91e63',
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: 'bubble' },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        bubble: { distance: 150, size: 8, duration: 2, opacity: 0.8, speed: 3 },
+                        push: { particles_nb: 4 },
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Music control
+            const musicControl = document.getElementById('musicControl');
+            const bgMusic = document.getElementById('bgMusic');
+            let musicPlaying = false;
+
+            musicControl.addEventListener('click', () => {
+                if (musicPlaying) {
+                    bgMusic.pause();
+                    musicControl.classList.remove('active');
+                } else {
+                    bgMusic.play().catch(e => console.log('Audio autoplay was prevented.'));
+                    musicControl.classList.add('active');
+                }
+                musicPlaying = !musicPlaying;
+            });
+
+            // Setup Intersection Observer for cards
+            const memoryCards = document.querySelectorAll('.memory-card');
+            
+            const observerOptions = {
+                root: document.querySelector('.memory-lane-container'),
+                rootMargin: '0px',
+                threshold: 0.6
+            };
+            
+            const cardObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        // Don't remove visible class once it's added for smoother experience
+                        // entry.target.classList.remove('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            memoryCards.forEach(card => {
+                cardObserver.observe(card);
+            });
+
+            // Navigation controls
+            const memoryLane = document.getElementById('memoryLane');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finalBtn = document.getElementById('finalBtn');
+            const proposalPage = document.getElementById('proposalPage');
+            const backBtn = document.getElementById('backBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            
+            prevBtn.addEventListener('click', () => {
+                memoryLane.scrollBy({ left: -340, behavior: 'smooth' });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                memoryLane.scrollBy({ left: 340, behavior: 'smooth' });
+            });
+            
+            finalBtn.addEventListener('click', () => {
+                // Show proposal page with smooth transition
+                document.body.style.overflow = 'hidden';
+                proposalPage.classList.add('visible');
+            });
+            
+            backBtn.addEventListener('click', () => {
+                // Close proposal page
+                proposalPage.classList.remove('visible');
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                }, 800);
+            });
+            
+            yesBtn.addEventListener('click', () => {
+                // Create heart explosion animation when yes is clicked
+                createHeartExplosion();
+                
+                // Change button text
+                yesBtn.textContent = "I Love You! ❤️";
+                yesBtn.disabled = true;
+                
+                // Hide back button
+                backBtn.style.display = 'none';
+                
+                // Redirect to the next page
+                setTimeout(() => {
+                    window.location.href = 'gift.html'; // Replace 'nextPage.html' with your target page URL
+                }, 2000); // Delay for 2 seconds to allow the animation to play
+            });
+            
+            function createHeartExplosion() {
+                const heartsContainer = document.createElement('div');
+                heartsContainer.style.position = 'absolute';
+                heartsContainer.style.top = '0';
+                heartsContainer.style.left = '0';
+                heartsContainer.style.width = '100%';
+                heartsContainer.style.height = '100%';
+                heartsContainer.style.pointerEvents = 'none';
+                heartsContainer.style.zIndex = '100';
+                proposalPage.appendChild(heartsContainer);
+                
+                const heartEmojis = ['❤️', '💖', '💘', '💕', '💓', '💗', '💞'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const heart = document.createElement('div');
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.top = `${Math.random() * 100}%`;
+                    heart.style.opacity = '0';
+                    heart.style.animation = `float ${Math.random() * 3 + 2}s ease-out forwards`;
+                    heartsContainer.appendChild(heart);
+                }
+                
+                // Add animation keyframes
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% {
+                            transform: translate(0, 0) rotate(0deg);
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translate(${Math.random() > 0.5 ? '-' : ''}${Math.random() * 300}px, -${Math.random() * 300 + 200}px) rotate(${Math.random() * 360}deg);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Progress bar
+            const progressBar = document.getElementById('progressBar');
+            
+            memoryLane.addEventListener('scroll', () => {
+                const scrollPosition = memoryLane.scrollLeft;
+                const maxScroll = memoryLane.scrollWidth - memoryLane.clientWidth;
+                const scrollPercentage = (scrollPosition / maxScroll) * 100;
+                progressBar.style.width = `${scrollPercentage}%`;
+            });
+
+            // Arrow key navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    memoryLane.scrollBy({ left: -340, behavior: 'smooth' });
+                } else if (e.key === 'ArrowRight') {
+                    memoryLane.scrollBy({ left: 340, behavior: 'smooth' });
+                } else if (e.key === 'Escape' && proposalPage.classList.contains('visible')) {
+                    proposalPage.classList.remove('visible');
+                    setTimeout(() => {
+                        document.body.style.overflow = '';
+                    }, 800);
+                }
+            });
+
+            // Initialize by making all cards visible as user scrolls
+            setTimeout(() => {
+                // Make first cards visible initially
+                const firstVisibleCards = Array.from(memoryCards).slice(0, 2);
+                firstVisibleCards.forEach(card => card.classList.add('visible'));
+                
+                // Add scroll listener to progressively reveal cards
+                memoryLane.addEventListener('scroll', () => {
+                    memoryCards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, index * 100);
+                    });
+                }, { once: true });
+            }, 300);
+        });
+    </script>
+</body>
+</html>
